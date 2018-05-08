@@ -56,8 +56,8 @@ app.use(session({
 passportSetup(app);
     
 
-const authRoutes = require('./routes/auth');
-app.use('/auth', authRoutes);
+const authRouter = require('./routes/auth');
+app.use('/', authRouter);
 
 const eventRouter = require('./routes/event-api-router');
 app.use('/api', eventRouter);

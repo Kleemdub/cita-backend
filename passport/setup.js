@@ -1,5 +1,8 @@
 const passport = require("passport");
 const User = require("../models/User");
+const Event = require("../models/Event");
+const Tune = require("../models/Tune");
+
 // const flash = require('flash');
 
 // require("./google-strategy");
