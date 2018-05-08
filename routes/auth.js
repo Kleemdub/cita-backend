@@ -13,4 +13,4 @@ const bcrypt = require("bcryptjs");
 
 
 
-module.exports = authRoutes;
+module.exports = router;

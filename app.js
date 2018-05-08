@@ -58,6 +58,8 @@ passportSetup(app);
 
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
-      
+
+const eventRouter = require('./routes/event-api-router');
+app.use('/api', eventRouter);
 
 module.exports = app;
