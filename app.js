@@ -66,3 +66,8 @@ const eventRouter = require('./routes/event-api-router');
 app.use('/api', eventRouter);
 
 module.exports = app;
+
+// Send Angular's HTML for all other routes
+app.use((req, res, next) => {
+  res.sendFiles(__dirname + 'public/index.html');
+});
