@@ -1,72 +1,93 @@
 const express = require("express");
 const passport = require('passport');
-// const authRoutes = express.Router();
 const User = require("../models/User");
+const Event = require("../models/Event");
+const Tune = require("../models/Tune");
 
 const router     = express.Router();
 // const nodemailer =  require('nodemailer');
 
 // Bcrypt to encrypt passwords
 const bcrypt = require("bcryptjs");
-// const bcryptSalt = 10;
+const bcryptSalt = 10;
 
 
 //Signup route ////////////////////////////////////////////////////////
 
-router.get("/signup", (req, res, next) => {
-// res.render('auth/signup');
-});
-  
-router.post("/process-signup", (req, res, next) => {
+router.post("/signup", (req, res, next) => {
 const { nickname, email, password } = req.body;
 
     if(password === "" || password.match(/[0-9]/) === null ){
-        res.redirect("/signup");
+        // res.redirect("/signup");
+        const err = new Error("Username or password invalid");
+        err.status = 400;
+        next(err);
         return;
     }
 
-    const salt = bcrypt.genSaltSync(10); 
+    User.findOne({ nickname }, "nickname", (err, user) => {
+        if(user !== null) {
+            const err = new Error("Nickname already exist");
+            err.status = 400;
+            next(err);
+            return;
+        }
+    });
+
+
+    const salt = bcrypt.genSaltSync(bcryptSalt); 
     const encryptedPassword = bcrypt.hashSync(password, salt)
 
-    User.create({ nickname, email, encryptedPassword })
-    .then(()=>{
-        res.redirect("/login");
-    })
-    .catch((err) => {
-        next(err);
+    const newUser = new User({
+        nickname,
+        encryptedPassword: encryptedPassword,
+        email: email
     });
+  
+    newUser.save((err) => {
+        if (err) {
+            next(err);
+        } else {
+            req.login(newUser, () => {
+                newUser.encryptedPassword = undefined;
+                res.json({ userInfo: newUser });
+            });
+        }
+    });
+    
 });
   
+
 //login Route //////////////////////////////////////////////////////////
 
-router.get("/login", (req, res, next) =>{
-// res.render("auth/login");
-});
-  
-router.post("/process-login", (req, res, next) => {
+router.post("/login", (req, res, next) => {
 const {email, password} = req.body;
 
     User.findOne({ email })
     .then((userDetails)=>{
         if (!userDetails){
-            res.redirect("/login");
+            const err = new Error("Log in failed");
+            err.status = 400;
+            next(err);
             return;
         }
-        
+
         const { encryptedPassword } = userDetails;
         if(!bcrypt.compareSync(password, encryptedPassword)) {
-            res.redirect("/login");
-            return
+            const err = new Error("Log in failed");
+            err.status = 400;
+            next(err);
+            return;
         }
-        
+
         req.login(userDetails, () =>{
-            res.redirect("/");
+            userDetails.encryptedPassword = undefined;
+            res.json({ userInfo: userDetails });
         });
     })
     .catch((err) => {
     next(err);
     });
-
 });
   
   
@@ -74,8 +95,17 @@ const {email, password} = req.body;
 
 router.get("/logout", (req, res, next) => {
     req.logout();
-    res.redirect("/signup");
+    res.json({ userInfo: null });
 });
 
+
+//check login route ////////////////////////////////////////////////////
+
+router.get("/checklogin", (req, res, next) => {
+    if(req.user) {
+        req.user.encryptedPassword = undefined;
+    }
+    res.json({ userInfo: req.user });
+});
 
 module.exports = router;
