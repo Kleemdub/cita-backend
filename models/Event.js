@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
 const eventSchema = new Schema({
-    title: { type : String, required: true, unique: true },
+    title: { type : String },
     admin: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true
     },
+    tags: [ { type: String } ],
     nbSelectas: { type: Number },
     selectas: [
         {
@@ -33,7 +34,7 @@ const eventSchema = new Schema({
                     ref: 'User'
                 }
             ],
-            genres: [ { type: String } ],
+            genres: { type: String },
             style: { type: String },
             sets: [
                 {
@@ -57,7 +58,7 @@ const eventSchema = new Schema({
     ],
     status: {
         type: String, 
-        enum: ["open", "ready", "displayed", "closed"],
+        enum: ["open", "pending", "ready", "displayed", "closed"],
         default: "open"
     }
 }, {

@@ -17,6 +17,7 @@ const events = [
     {
         title: "Clash #1",
         admin: "5af1590a4b445b2bbc59b3f2",
+        tags: [ "ska", "rocksteady", "boss", "roots" ],
         nbSelectas: 3,
         selectas: [
             "5af1590a4b445b2bbc59b3ef", 
@@ -36,11 +37,7 @@ const events = [
                     "5af1590a4b445b2bbc59b3f1", 
                     "5af1590a4b445b2bbc59b3f0"
                 ],
-                genres: [ 
-                    "Ska",
-                    "Rocksteady",
-                    "Roots"
-                ],
+                genres: "ska",
                 style: "Vocal",
                 sets: [
                     {
@@ -95,11 +92,7 @@ const events = [
                     "5af1590a4b445b2bbc59b3f1", 
                     "5af1590a4b445b2bbc59b3f0"
                 ],
-                genres: [ 
-                    "Ska",
-                    "Rocksteady",
-                    "Roots"
-                ],
+                genres: "boss",
                 style: "Instrumental",
                 sets: [
                     {
@@ -150,11 +143,7 @@ const events = [
                 duration: 30,
                 isFinal: true,
                 selectas: [],
-                genres: [ 
-                    "Ska",
-                    "Rocksteady",
-                    "Roots"
-                ],
+                genres: "roots",
                 style: "Instrumental",
                 sets: []
             }
