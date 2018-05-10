@@ -41,6 +41,26 @@ router.get('/events/open', (req, res, next) => {
     });
 });
 
+// GET /api/events/:eventId
+router.get('/events/:eventId', (req, res, next) => {
+    const eventId = req.params.eventId;
+
+    Event
+    .findById(eventId)
+    .populate('admin')
+    .populate('selectas')
+    .populate('rounds.selectas')
+    .populate('rounds.sets.selecta')
+    .populate('rounds.sets.tracklist')
+    .then((event) => {
+        console.log(event);
+        res.json(event);
+    })
+    .catch((err) => {
+        next(err);
+    });
+});
+
 // POST /api/events
 router.post('/events', (req, res, next) => {
     console.log("-------------------------------------------------------------------------");

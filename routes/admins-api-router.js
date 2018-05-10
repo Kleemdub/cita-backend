@@ -8,29 +8,29 @@ const router = express.Router();
 // GET /api/admins/:adminId/events
 router.get('/admins/:adminId/events', (req, res, next) => {
     
-    const admin = req.params.adminId;
-    // res.send(admin);
+    const eventAdmin = req.params.adminId;
+    // res.send(eventAdmin);
     console.log("***********************************************************");
-    console.log(admin);
+    console.log(eventAdmin);
     console.log("***********************************************************");
 
-    // Event
-    // .find({ status: "displayed" })
-    // .sort({ createdAt: -1 })
-    // .populate('admin')
-    // .populate('selectas')
-    // .populate('rounds.selectas')
-    // .populate('rounds.sets.selecta')
-    // .populate('rounds.sets.tracklist')
-    // .then((events) => {
-    //     console.log("***********************************************************");
-    //     console.log(events);
-    //     console.log("***********************************************************");
-    //     res.json(events);
-    // })
-    // .catch((err) => {
-    //     next(err);
-    // });
+    Event
+    .find({ admin: eventAdmin })
+    .sort({ createdAt: -1 })
+    .populate('admin')
+    .populate('selectas')
+    .populate('rounds.selectas')
+    .populate('rounds.sets.selecta')
+    .populate('rounds.sets.tracklist')
+    .then((events) => {
+        console.log("***********************************************************");
+        console.log(events);
+        console.log("***********************************************************");
+        res.json(events);
+    })
+    .catch((err) => {
+        next(err);
+    });
 });
 
 
