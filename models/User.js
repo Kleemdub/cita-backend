@@ -12,7 +12,13 @@ const userSchema = new Schema({
   },
   cup: { type: Number, default: 0 },
   avatar: { type: String },
-  events: [
+  eventAdmin: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Event'
+    }
+  ],
+  eventParticipant: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Event'

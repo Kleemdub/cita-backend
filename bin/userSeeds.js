@@ -31,18 +31,6 @@ const users = [
         email: "nyah@gmail.com",
         encryptedPassword: "$2a$10$g.Ssyh1SyO244CU701K/lOkAHoIdMs3TP.g7kgARGuh15uZMn2PUi",
         role: "normal"
-    },
-    {
-        nickname: "Steo",
-        email: "steo@gmail.com",
-        encryptedPassword: "$2a$10$g.Ssyh1SyO244CU701K/lOkAHoIdMs3TP.g7kgARGuh15uZMn2PUi",
-        role: "normal"
-    },
-    {
-        nickname: "Clem Dub",
-        email: "clemdub@gmail.com",
-        encryptedPassword: "$2a$10$g.Ssyh1SyO244CU701K/lOkAHoIdMs3TP.g7kgARGuh15uZMn2PUi",
-        role: "admin"
     }
 ];
 

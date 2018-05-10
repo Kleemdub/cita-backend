@@ -65,6 +65,9 @@ app.use('/api', authRouter);
 const eventRouter = require('./routes/event-api-router');
 app.use('/api', eventRouter);
 
+const adminsRouter = require('./routes/admins-api-router');
+app.use('/api', adminsRouter);
+
 module.exports = app;
 
 // Send Angular's HTML for all other routes

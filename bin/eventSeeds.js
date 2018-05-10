@@ -15,14 +15,15 @@ console.error('Error connecting to mongo', err)
 
 const events = [
     {
-        title: "Clash #1",
-        admin: "5af1590a4b445b2bbc59b3f2",
+        title: "Sound Clash #1",
+        admin: "5af47829b1f4df36fcb52f7f",
         tags: [ "ska", "rocksteady", "boss", "roots" ],
         nbSelectas: 3,
+        status: "displayed",
         selectas: [
-            "5af1590a4b445b2bbc59b3ef", 
-            "5af1590a4b445b2bbc59b3f1", 
-            "5af1590a4b445b2bbc59b3f0"
+            "5af47829b1f4df36fcb52f7f", 
+            "5af47829b1f4df36fcb52f81", 
+            "5af47829b1f4df36fcb52f80"
         ],
         nbRounds: 3,
         rounds: [
@@ -33,15 +34,15 @@ const events = [
                 duration: 20,
                 isFinal: false,
                 selectas: [
-                    "5af1590a4b445b2bbc59b3ef", 
-                    "5af1590a4b445b2bbc59b3f1", 
-                    "5af1590a4b445b2bbc59b3f0"
+                    "5af47829b1f4df36fcb52f7f", 
+                    "5af47829b1f4df36fcb52f81", 
+                    "5af47829b1f4df36fcb52f80"
                 ],
                 genres: "ska",
                 style: "Vocal",
                 sets: [
                     {
-                        selecta: "5af1590a4b445b2bbc59b3ef",
+                        selecta: "5af47829b1f4df36fcb52f7f",
                         audio: "fake link",
                         title: "User 1 Set 1",
                         description: "Blah Blah Blah",
@@ -54,7 +55,7 @@ const events = [
                         score: 0
                     },
                     {
-                        selecta: "5af1590a4b445b2bbc59b3f1",
+                        selecta: "5af47829b1f4df36fcb52f81",
                         audio: "fake link",
                         title: "User 2 Set 1",
                         description: "Blah Blah Blah",
@@ -67,7 +68,7 @@ const events = [
                         score: 0
                     },
                     {
-                        selecta: "5af1590a4b445b2bbc59b3f0",
+                        selecta: "5af47829b1f4df36fcb52f80",
                         audio: "fake link",
                         title: "User 3 Set 1",
                         description: "Blah Blah Blah",
@@ -88,15 +89,15 @@ const events = [
                 duration: 20,
                 isFinal: false,
                 selectas: [
-                    "5af1590a4b445b2bbc59b3ef", 
-                    "5af1590a4b445b2bbc59b3f1", 
-                    "5af1590a4b445b2bbc59b3f0"
+                    "5af47829b1f4df36fcb52f7f", 
+                    "5af47829b1f4df36fcb52f81", 
+                    "5af47829b1f4df36fcb52f80"
                 ],
                 genres: "boss",
                 style: "Instrumental",
                 sets: [
                     {
-                        selecta: "5af1590a4b445b2bbc59b3ef",
+                        selecta: "5af47829b1f4df36fcb52f7f",
                         audio: "fake link",
                         title: "User 1 Set 2",
                         description: "Blah Blah Blah",
@@ -109,7 +110,7 @@ const events = [
                         score: 0
                     },
                     {
-                        selecta: "5af1590a4b445b2bbc59b3f1",
+                        selecta: "5af47829b1f4df36fcb52f81",
                         audio: "fake link",
                         title: "User 2 Set 2",
                         description: "Blah Blah Blah",
@@ -122,7 +123,7 @@ const events = [
                         score: 0
                     },
                     {
-                        selecta: "5af1590a4b445b2bbc59b3f0",
+                        selecta: "5af47829b1f4df36fcb52f80",
                         audio: "fake link",
                         title: "User 3 Set 2",
                         description: "Blah Blah Blah",
