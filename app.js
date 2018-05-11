@@ -68,6 +68,9 @@ app.use('/api', eventRouter);
 const adminsRouter = require('./routes/admins-api-router');
 app.use('/api', adminsRouter);
 
+const uploadRouter = require('./routes/upload-router');
+app.use('/api', uploadRouter);
+
 module.exports = app;
 
 // Send Angular's HTML for all other routes
