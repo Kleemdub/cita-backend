@@ -19,6 +19,7 @@ const events = [
         admin: "5af47829b1f4df36fcb52f7f",
         tags: [ "ska", "rocksteady", "boss", "roots" ],
         nbSelectas: 3,
+        registrations: 3,
         status: "displayed",
         selectas: [
             "5af47829b1f4df36fcb52f7f", 

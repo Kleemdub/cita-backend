@@ -10,6 +10,7 @@ const eventSchema = new Schema({
     },
     tags: [ { type: String } ],
     nbSelectas: { type: Number },
+    registrations: { type: Number },
     selectas: [
         {
             type: Schema.Types.ObjectId,

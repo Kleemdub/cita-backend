@@ -53,12 +53,62 @@ router.get('/events/:eventId', (req, res, next) => {
     .populate('rounds.sets.selecta')
     .populate('rounds.sets.tracklist')
     .then((event) => {
-        console.log(event);
+        // console.log(event);
         res.json(event);
     })
     .catch((err) => {
         next(err);
     });
+});
+
+// PUT /api/events/:eventId
+router.put('/events/:eventId', (req, res, next) => {
+    const eventId = req.params.eventId;
+    const { _id, nbRounds, nbRegistrations, nbSelectas } = req.body;
+    console.log("***********************************************************");
+    // console.log(req.body);
+    console.log("Nombre rounds : " + nbRounds);
+    console.log("Selecta id : " + _id);
+    console.log("***********************************************************");
+
+    const newRegistrations = nbRegistrations + 1;
+    var newStatus = "open";
+    if(newRegistrations == nbSelectas) {
+        newStatus = "pending";
+    }
+
+    Event.findByIdAndUpdate(eventId, {$set: { registrations: newRegistrations, status: newStatus }, $push: { selectas: _id }}, {new: true} )
+    .then(() => {
+
+        if(nbRounds == 1) {
+            Event.findByIdAndUpdate(eventId, { $push: { "rounds.0.selectas": _id }}, {new: true})
+            .then((updatedEvent) => {
+                res.json(updatedEvent);
+            })
+            .catch((err) => {
+                next(err);
+            });
+        }
+
+        else if(nbRounds == 2 || nbRounds == 3) {
+            Event.findByIdAndUpdate(eventId, { $push: { "rounds.0.selectas": _id }})
+            .then(() => {
+                return Event.findByIdAndUpdate(eventId, { $push: { "rounds.1.selectas": _id }}, {new: true});
+            })
+            .then((updatedEvent) => {
+                res.json(updatedEvent);
+            })
+            .catch((err) => {
+                next(err);
+            });
+        }
+    })
+    .catch((err) => {
+        next(err);
+    });
+
+
+    // res.json(req.body);
 });
 
 // POST /api/events

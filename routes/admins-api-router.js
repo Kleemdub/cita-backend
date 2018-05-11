@@ -10,9 +10,9 @@ router.get('/admins/:adminId/events', (req, res, next) => {
     
     const eventAdmin = req.params.adminId;
     // res.send(eventAdmin);
-    console.log("***********************************************************");
-    console.log(eventAdmin);
-    console.log("***********************************************************");
+    // console.log("***********************************************************");
+    // console.log(eventAdmin);
+    // console.log("***********************************************************");
 
     Event
     .find({ admin: eventAdmin })
@@ -23,9 +23,9 @@ router.get('/admins/:adminId/events', (req, res, next) => {
     .populate('rounds.sets.selecta')
     .populate('rounds.sets.tracklist')
     .then((events) => {
-        console.log("***********************************************************");
-        console.log(events);
-        console.log("***********************************************************");
+        // console.log("***********************************************************");
+        // console.log(events);
+        // console.log("***********************************************************");
         res.json(events);
     })
     .catch((err) => {
