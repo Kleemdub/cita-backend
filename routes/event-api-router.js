@@ -119,9 +119,9 @@ router.post('/events', (req, res, next) => {
     console.log("-------------------------------------------------------------------------");
     console.log("-------------------------------------------------------------------------");
 
-    const { title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status } = req.body;
+    const { title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status, registrations } = req.body;
 
-    Event.create({ title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status })
+    Event.create({ title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status, registrations })
     .then((addedEvent) => {
         const newEvent = addedEvent._id;
         var newEventObj = mongoose.Types.ObjectId(newEvent);
