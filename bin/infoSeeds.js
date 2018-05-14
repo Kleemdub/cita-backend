@@ -15,7 +15,8 @@ console.error('Error connecting to mongo', err)
 
 const infos = [
     {
-        count: 1
+        count: 1,
+        name: "SoundClash Count"
     }
 ];
 

@@ -50,7 +50,7 @@ router.post('/upload/event/:eventId/round/:roundId/user/:userId', upload.single(
         Event.findByIdAndUpdate(eventId, {$push: { "rounds.0.sets": set }}, {new: true} )
         .then((updatedEvent) => {
             console.log(updatedEvent);
-            return mixcloudUpload(newFileName, title);
+            // return mixcloudUpload(newFileName, title);
         })
         .catch((err) => {
             next(err);
@@ -60,7 +60,7 @@ router.post('/upload/event/:eventId/round/:roundId/user/:userId', upload.single(
         Event.findByIdAndUpdate(eventId, {$push: { "rounds.1.sets": set }}, {new: true} )
         .then((updatedEvent) => {
             console.log(updatedEvent);
-            return mixcloudUpload(newFileName, title);
+            // return mixcloudUpload(newFileName, title);
         })
         .catch((err) => {
             next(err);
@@ -70,7 +70,7 @@ router.post('/upload/event/:eventId/round/:roundId/user/:userId', upload.single(
         Event.findByIdAndUpdate(eventId, {$push: { "rounds.2.sets": set }}, {new: true} )
         .then((updatedEvent) => {
             console.log(updatedEvent);
-            return mixcloudUpload(newFileName, title);
+            // return mixcloudUpload(newFileName, title);
         })
         .catch((err) => {
             next(err);

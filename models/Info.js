@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
 const infoSchema = new Schema({
-  count: { type: Number }
+  count: { type: Number },
+  name: { type: String}
 }, {
   timestamps: true
 });

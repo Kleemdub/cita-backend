@@ -3,13 +3,15 @@ const mongoose = require('mongoose');
 const Event = require('../models/Event');
 const Tune = require('../models/Tune');
 const User = require("../models/User");
+const Info = require("../models/Info");
 const router = express.Router();
 
 // GET /api/events
 router.get('/events', (req, res, next) => {
     Event
     .find({ status: "displayed" })
-    .sort({ createdAt: -1 })
+    .sort({ createdAt: 1 })
+    .limit(1)
     .populate('admin')
     .populate('selectas')
     .populate('rounds.selectas')
@@ -61,6 +63,7 @@ router.get('/events/:eventId', (req, res, next) => {
     });
 });
 
+
 // PUT /api/events/:eventId
 router.put('/events/:eventId', (req, res, next) => {
     const eventId = req.params.eventId;
@@ -109,6 +112,33 @@ router.put('/events/:eventId', (req, res, next) => {
 
 
     // res.json(req.body);
+});
+
+// PUT /api/events/launch/:eventId
+router.put('/events/launch/:eventId', (req, res, next) => {
+    const eventId = req.params.eventId;
+    // console.log('eventId : ' + eventId);
+    Info.findOne()
+    .then((result) => {
+        // console.log(result.count);
+        const infoId = result._id;
+        const currentCount = result.count;
+        const eventName = "Sound Clash #" + currentCount;
+        console.log('eventId : ' + eventId);
+        console.log('eventName : ' + eventName);
+        return Event.findByIdAndUpdate(eventId, {title: eventName, status: 'displayed'});
+        // return infoId;
+    })
+    .then(() => {
+        // console.log(infoId);
+        return Info.findOneAndUpdate({name: 'SoundClash Count'}, { $inc: { count: 1 }});
+    })
+    .then((updatedInfo) => {
+        res.json(updatedInfo);
+    })
+    .catch((err) => {
+        next(err);
+    });
 });
 
 // POST /api/events

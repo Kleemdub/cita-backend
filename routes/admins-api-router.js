@@ -9,13 +9,35 @@ const router = express.Router();
 router.get('/admins/:adminId/events', (req, res, next) => {
     
     const eventAdmin = req.params.adminId;
+
+    Event
+    .find({ admin: eventAdmin })
+    .sort({ createdAt: -1 })
+    .populate('admin')
+    .populate('selectas')
+    .populate('rounds.selectas')
+    .populate('rounds.sets.selecta')
+    .populate('rounds.sets.tracklist')
+    .then((events) => {
+        res.json(events);
+    })
+    .catch((err) => {
+        next(err);
+    });
+});
+
+// GET /api/selectas/:selectaId/events
+router.get('/selectas/:selectaId/events', (req, res, next) => {
+    
+    const eventSelecta = req.params.selectaId;
     // res.send(eventAdmin);
     // console.log("***********************************************************");
     // console.log(eventAdmin);
     // console.log("***********************************************************");
 
     Event
-    .find({ admin: eventAdmin })
+    // .find({ selectas: eventSelecta })
+    .find({ selectas: eventSelecta, admin: { $ne: eventSelecta } })
     .sort({ createdAt: -1 })
     .populate('admin')
     .populate('selectas')
@@ -32,7 +54,5 @@ router.get('/admins/:adminId/events', (req, res, next) => {
         next(err);
     });
 });
-
-
 
 module.exports = router;
