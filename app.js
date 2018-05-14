@@ -71,6 +71,9 @@ app.use('/api', adminsRouter);
 const uploadRouter = require('./routes/upload-router');
 app.use('/api', uploadRouter);
 
+const gameRouter = require('./routes/game-router');
+app.use('/api', gameRouter);
+
 module.exports = app;
 
 // Send Angular's HTML for all other routes

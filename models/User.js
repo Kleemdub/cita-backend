@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const Event = require('./Event');
 const Schema   = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -11,6 +12,11 @@ const userSchema = new Schema({
     default: "normal"
   },
   cup: { type: Number, default: 0 },
+  game: {
+    bullet: { type: Number },
+    like: { type: Number },
+    bouse: { type: Number }
+  },
   avatar: { type: String },
   eventAdmin: [
     {
