@@ -9,6 +9,49 @@ const eventSchema = new Schema({
         required: true
     },
     tags: [ { type: String } ],
+    winner: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    winner1: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    winner2: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    winner3: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
+    scores1: [
+        {
+            selecta: {
+                type: Schema.Types.ObjectId,
+                ref: "User"
+            },
+            score: { type: Number }
+        }
+    ],
+    scores2: [
+        {
+            selecta: {
+                type: Schema.Types.ObjectId,
+                ref: "User"
+            },
+            score: { type: Number }
+        }
+    ],
+    scores3: [
+        {
+            selecta: {
+                type: Schema.Types.ObjectId,
+                ref: "User"
+            },
+            score: { type: Number }
+        }
+    ],
     nbSelectas: { type: Number },
     registrations: { type: Number },
     selectas: [

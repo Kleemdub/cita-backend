@@ -75,12 +75,18 @@ router.put('/events/:eventId', (req, res, next) => {
     console.log("***********************************************************");
 
     const newRegistrations = nbRegistrations + 1;
+
+    const scoresObj = {
+        selecta: _id,
+        score: 0
+    };
+
     var newStatus = "open";
     if(newRegistrations == nbSelectas) {
         newStatus = "pending";
     }
 
-    Event.findByIdAndUpdate(eventId, {$set: { registrations: newRegistrations, status: newStatus }, $push: { selectas: _id }}, {new: true} )
+    Event.findByIdAndUpdate(eventId, {$set: { registrations: newRegistrations, status: newStatus }, $push: { selectas: _id, scores1: scoresObj, scores2: scoresObj, scores3: scoresObj }}, {new: true} )
     .then(() => {
 
         if(nbRounds == 1) {
@@ -141,6 +147,70 @@ router.put('/events/launch/:eventId', (req, res, next) => {
     });
 });
 
+// PUT /api/events/close/round/:roundId/:roundPos
+router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
+    const roundId = req.params.roundId;
+    const roundPos = req.params.roundPos;
+    // console.log('ID : ' + roundId + ', POS : ' + roundPos);
+    // var newEventObj = mongoose.Types.ObjectId(newEvent);
+    var scoresTemp = 0;
+    var roundWinner;
+    var eventId;
+
+    if(roundPos == 0) {
+        Event.findOne({ 'rounds._id': roundId })
+        .then((event) => {
+            // console.log(event.nbSelectas);
+            eventId = event._id;
+
+            for(var i = 0; i < event.nbSelectas; i++) {
+                // console.log(event.rounds[0].sets[i].score);
+                console.log(event.rounds[0].sets[i].selecta);
+                var score = event.rounds[0].sets[i].score;
+                var selectaId = event.rounds[0].sets[i].selecta;
+
+                console.log('BEFORE ----------------------------------');
+                console.log('score : ' + score);
+                console.log('scoresTemp : ' + scoresTemp);
+                console.log('roundWinner : ' + roundWinner);
+                console.log('selectaId : ' + selectaId);
+
+                if(score > scoresTemp) {
+                    roundWinner = selectaId;
+                    scoresTemp = score;
+                }
+
+                console.log('AFTER ----------------------------------');
+                console.log('score : ' + score);
+                console.log('scoresTemp : ' + scoresTemp);
+                console.log('roundWinner : ' + roundWinner);
+                console.log('selectaId : ' + selectaId);
+
+                Event.update(
+                    {  'scores1.selecta': selectaId },
+                    { $set:  { 'scores1.$.score': score }}
+                )
+                .then(() => {})
+                .catch((err) => {
+                    next(err);
+                });
+            }
+
+            Event.findByIdAndUpdate(eventId, {$set: { winner1: roundWinner }})
+            .then()
+            .catch((err) => {
+                next(err);
+            });
+
+        })
+        .catch((err) => {
+            next(err);
+        });
+    }
+
+});
+
+// CREATION DES EVENTS
 // POST /api/events
 router.post('/events', (req, res, next) => {
     console.log("-------------------------------------------------------------------------");
@@ -149,9 +219,9 @@ router.post('/events', (req, res, next) => {
     console.log("-------------------------------------------------------------------------");
     console.log("-------------------------------------------------------------------------");
 
-    const { title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status, registrations } = req.body;
+    const { title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status, registrations, scores1, scores2, scores3  } = req.body;
 
-    Event.create({ title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status, registrations })
+    Event.create({ title, admin, tags, nbSelectas, selectas, nbRounds, rounds, status, registrations, scores1, scores2, scores3 })
     .then((addedEvent) => {
         const newEvent = addedEvent._id;
         var newEventObj = mongoose.Types.ObjectId(newEvent);
