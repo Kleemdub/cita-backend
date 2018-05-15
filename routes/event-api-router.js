@@ -123,6 +123,13 @@ router.put('/events/:eventId', (req, res, next) => {
 // PUT /api/events/launch/:eventId
 router.put('/events/launch/:eventId', (req, res, next) => {
     const eventId = req.params.eventId;
+
+    const newGame = {
+        bullet: 4,
+        like: 8,
+        bouse: 4
+    }
+
     // console.log('eventId : ' + eventId);
     Info.findOne()
     .then((result) => {
@@ -139,8 +146,11 @@ router.put('/events/launch/:eventId', (req, res, next) => {
         // console.log(infoId);
         return Info.findOneAndUpdate({name: 'SoundClash Count'}, { $inc: { count: 1 }});
     })
-    .then((updatedInfo) => {
-        res.json(updatedInfo);
+    .then(() => {
+        return User.updateMany( { $set: { game: newGame } } );
+     })
+    .then((user) => {
+        res.json(user);
     })
     .catch((err) => {
         next(err);
@@ -157,8 +167,14 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
     var roundWinner;
     var eventId;
 
+    const newGame = {
+        bullet: 4,
+        like: 8,
+        bouse: 4
+    }
+
     if(roundPos == 0) {
-        Event.findOne({ 'rounds._id': roundId })
+        Event.findOneAndUpdate({ 'rounds._id': roundId }, {$set: { 'rounds.0.status': "closed" }})
         .then((event) => {
             // console.log(event.nbSelectas);
             eventId = event._id;
@@ -196,8 +212,14 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
                 });
             }
 
-            Event.findByIdAndUpdate(eventId, {$set: { winner1: roundWinner }})
-            .then()
+            // (bookId, {user, status, $unset: {cache: 1}})
+            Event.findByIdAndUpdate(eventId, {$set: { winner1: roundWinner, 'rounds.1.status': 'displayed' }})
+            .then(() => {
+               return User.updateMany( { $set: { game: newGame } } );
+            })
+            .then((result) => {
+                res.json(result);
+            })
             .catch((err) => {
                 next(err);
             });
@@ -209,6 +231,7 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
     }
 
 });
+
 
 // CREATION DES EVENTS
 // POST /api/events

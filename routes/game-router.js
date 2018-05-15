@@ -24,7 +24,8 @@ router.get('/game/check/:userId', (req, res, next) => {
         }
         else {
             console.log('USER GAME DOES NOT EXIST');
-            User.findByIdAndUpdate(userId, { game: newGame }, {new: true})
+            // User.findByIdAndUpdate(userId, { game: newGame }, {new: true})
+            User.findById(userId)
             .then((user) => {
                 res.json(user.game);
             })
