@@ -260,11 +260,15 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
                     {  'scores1.selecta': selectaId },
                     { $set:  { 'scores1.$.score': score }}
                 )
-                .then(() => {})
+                .then(() => {
+                    console.log('ALOOOOO---------------------------------------------')
+                })
                 .catch((err) => {
                     next(err);
                 });
             }
+
+            console.log('ROUND WINNER IS : ' + roundWinner);
 
             // (bookId, {user, status, $unset: {cache: 1}})
             Event.findByIdAndUpdate(eventId, {$set: { winner1: roundWinner, 'rounds.1.status': 'displayed' }})
