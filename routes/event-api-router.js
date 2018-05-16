@@ -13,6 +13,13 @@ router.get('/events', (req, res, next) => {
     .sort({ createdAt: 1 })
     .limit(1)
     .populate('admin')
+    .populate('winner')
+    .populate('winner1')
+    .populate('winner2')
+    .populate('winner3')
+    .populate('scores1.selecta')
+    .populate('scores2.selecta')
+    .populate('scores3.selecta')
     .populate('selectas')
     .populate('rounds.selectas')
     .populate('rounds.sets.selecta')
@@ -25,12 +32,20 @@ router.get('/events', (req, res, next) => {
     });
 });
 
+
 // GET /api/events/open
 router.get('/events/open', (req, res, next) => {
     Event
     .find({ status: "open" })
     .sort({ createdAt: -1 })
     .populate('admin')
+    .populate('winner')
+    .populate('winner1')
+    .populate('winner2')
+    .populate('winner3')
+    .populate('scores1.selecta')
+    .populate('scores2.selecta')
+    .populate('scores3.selecta')
     .populate('selectas')
     .populate('rounds.selectas')
     .populate('rounds.sets.selecta')
@@ -42,6 +57,38 @@ router.get('/events/open', (req, res, next) => {
         next(err);
     });
 });
+
+
+// GET /api/archives/events/:eventId/round/:roundId
+router.get('/archives/events/:eventId/round/:roundId', (req, res, next) => {
+    const eventId = req.params.eventId;
+    const roundId = req.params.roundId;
+    // console.log('eventId : ' + eventId + ', roundId : ' + roundId);
+
+    Event
+    .findById(eventId)
+    .populate('admin')
+    .populate('winner')
+    .populate('winner1')
+    .populate('winner2')
+    .populate('winner3')
+    .populate('scores1.selecta')
+    .populate('scores2.selecta')
+    .populate('scores3.selecta')
+    .populate('selectas')
+    .populate('rounds.selectas')
+    .populate('rounds.sets.selecta')
+    .populate('rounds.sets.tracklist')
+    .then((event) => {
+        // console.log(event);
+        res.json(event);
+    })
+    .catch((err) => {
+        next(err);
+    });
+
+});
+
 
 // GET /api/events/:eventId
 router.get('/events/:eventId', (req, res, next) => {
@@ -50,6 +97,13 @@ router.get('/events/:eventId', (req, res, next) => {
     Event
     .findById(eventId)
     .populate('admin')
+    .populate('winner')
+    .populate('winner1')
+    .populate('winner2')
+    .populate('winner3')
+    .populate('scores1.selecta')
+    .populate('scores2.selecta')
+    .populate('scores3.selecta')
     .populate('selectas')
     .populate('rounds.selectas')
     .populate('rounds.sets.selecta')
