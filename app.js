@@ -74,6 +74,9 @@ app.use('/api', uploadRouter);
 const gameRouter = require('./routes/game-router');
 app.use('/api', gameRouter);
 
+const chatRouter = require('./routes/chat-router');
+app.use('/api', chatRouter);
+
 module.exports = app;
 
 // Send Angular's HTML for all other routes
