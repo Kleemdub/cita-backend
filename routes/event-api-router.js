@@ -257,12 +257,10 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
                 console.log('selectaId : ' + selectaId);
 
                 Event.update(
-                    {  'scores1.selecta': selectaId },
+                    {  _id: eventId, 'scores1.selecta': selectaId },
                     { $set:  { 'scores1.$.score': score }}
                 )
-                .then(() => {
-                    console.log('ALOOOOO---------------------------------------------')
-                })
+                .then(() => {})
                 .catch((err) => {
                     next(err);
                 });
