@@ -256,11 +256,15 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
                 console.log('roundWinner : ' + roundWinner);
                 console.log('selectaId : ' + selectaId);
 
-                Event.update(
+                Event.findOneAndUpdate(
                     {  _id: eventId, 'scores1.selecta': selectaId },
-                    { $set:  { 'scores1.$.score': score }}
+                    { $set:  { 'scores1.$.score': score }},
+                    {new: true}
                 )
-                .then(() => {})
+                .then((e) => {
+                    console.log("WOOP_________________", e.scores1)
+                    console.log("_____________________", event.scores1)
+                })
                 .catch((err) => {
                     next(err);
                 });
