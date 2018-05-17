@@ -290,6 +290,69 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
         });
     }
 
+    if(roundPos == 1) {
+        Event.findOneAndUpdate({ 'rounds._id': roundId }, {$set: { 'rounds.1.status': "closed" }})
+        .then((event) => {
+            // console.log(event.nbSelectas);
+            eventId = event._id;
+
+            for(var i = 0; i < event.nbSelectas; i++) {
+                // console.log(event.rounds[0].sets[i].score);
+                console.log(event.rounds[1].sets[i].selecta);
+                var score = event.rounds[1].sets[i].score;
+                var selectaId = event.rounds[1].sets[i].selecta;
+
+                console.log('BEFORE ----------------------------------');
+                console.log('score : ' + score);
+                console.log('scoresTemp : ' + scoresTemp);
+                console.log('roundWinner : ' + roundWinner);
+                console.log('selectaId : ' + selectaId);
+
+                if(score > scoresTemp) {
+                    roundWinner = selectaId;
+                    scoresTemp = score;
+                }
+
+                console.log('AFTER ----------------------------------');
+                console.log('score : ' + score);
+                console.log('scoresTemp : ' + scoresTemp);
+                console.log('roundWinner : ' + roundWinner);
+                console.log('selectaId : ' + selectaId);
+
+                Event.findOneAndUpdate(
+                    {  _id: eventId, 'scores2.selecta': selectaId },
+                    { $set:  { 'scores2.$.score': score }},
+                    {new: true}
+                )
+                .then((e) => {
+                    console.log("WOOP_________________", e.scores2)
+                    console.log("_____________________", event.scores2)
+                })
+                .catch((err) => {
+                    next(err);
+                });
+            }
+
+            console.log('ROUND WINNER IS : ' + roundWinner);
+
+            // (bookId, {user, status, $unset: {cache: 1}})
+            Event.findByIdAndUpdate(eventId, {$set: { winner2: roundWinner, 'rounds.2.status': 'displayed' }})
+            .then(() => {
+               return User.updateMany( { $set: { game: newGame } } );
+            })
+            .then((result) => {
+                res.json(result);
+            })
+            .catch((err) => {
+                next(err);
+            });
+
+        })
+        .catch((err) => {
+            next(err);
+        });
+    }
+
 });
 
 

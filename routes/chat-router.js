@@ -1,9 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var app = express();
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+// var app = express();
+
 var Chat = require('../models/Chat.js');
 
 // // GET /api/chat
@@ -11,19 +10,6 @@ var Chat = require('../models/Chat.js');
 //     res.send('Express REST API');
 // });
 
-server.listen(4000);
-
-// socket io
-io.on('connection', function (socket) {
-    console.log('User connected');
-    socket.on('disconnect', function() {
-        console.log('User disconnected');
-    });
-    socket.on('save-message', function (data) {
-        console.log(data);
-        io.emit('new-message', { message: data });
-    });
-});
 
 // GET ALL CHATS  /api/chat/:room
 router.get('/chat/:room', function(req, res, next) {
