@@ -406,6 +406,20 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
 
 });
 
+// GET /api/watchit
+router.get('/watchit', (req, res, next) => {
+    WatchIt.find()
+    .sort({ createdAt: -1 })
+    .limit(5)
+    .populate('user')
+    .populate('event')
+    .then((result) => {
+        res.json(result);
+    })
+    .catch((err) => {
+        next(err);
+    });
+});
 
 // CREATION DES EVENTS
 // POST /api/events
