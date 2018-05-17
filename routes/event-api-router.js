@@ -4,6 +4,7 @@ const Event = require('../models/Event');
 const Tune = require('../models/Tune');
 const User = require("../models/User");
 const Info = require("../models/Info");
+const WatchIt = require("../models/WatchIt");
 const router = express.Router();
 
 // GET /api/events
@@ -200,9 +201,9 @@ router.put('/events/launch/:eventId', (req, res, next) => {
         // console.log(infoId);
         return Info.findOneAndUpdate({name: 'SoundClash Count'}, { $inc: { count: 1 }});
     })
-    .then(() => {
-        return User.updateMany( { $set: { game: newGame } } );
-     })
+    // .then(() => {
+    //     return User.updateMany( { $set: { game: newGame } } );
+    //  })
     .then((user) => {
         res.json(user);
     })
@@ -219,6 +220,8 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
     // var newEventObj = mongoose.Types.ObjectId(newEvent);
     var scoresTemp = 0;
     var roundWinner;
+    var finalScoresTemp = 0;
+    var finalWinner;
     var eventId;
 
     const newGame = {
@@ -270,10 +273,20 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
                 });
             }
 
-            console.log('ROUND WINNER IS : ' + roundWinner);
+            console.log('ROUND 1 WINNER IS : ' + roundWinner);
 
-            // (bookId, {user, status, $unset: {cache: 1}})
             Event.findByIdAndUpdate(eventId, {$set: { winner1: roundWinner, 'rounds.1.status': 'displayed' }})
+            .then((upEvent) => {
+
+                const watchit = {
+                    type: 'winRound',
+                    user: roundWinner,
+                    event: eventId,
+                    roundNumber: 1
+                }
+
+                return WatchIt.create(watchit);
+            })
             .then(() => {
                return User.updateMany( { $set: { game: newGame } } );
             })
@@ -295,57 +308,95 @@ router.put('/events/close/round/:roundId/:roundPos', (req, res, next) => {
         .then((event) => {
             // console.log(event.nbSelectas);
             eventId = event._id;
+            const isFinal = event.rounds[1].isFinal;
+            console.log('IS FINAL : ' + isFinal);
+            console.log('----------------------------------------------------------------------');
 
-            for(var i = 0; i < event.nbSelectas; i++) {
-                // console.log(event.rounds[0].sets[i].score);
-                console.log(event.rounds[1].sets[i].selecta);
-                var score = event.rounds[1].sets[i].score;
-                var selectaId = event.rounds[1].sets[i].selecta;
+            if(isFinal) {
+                for(var i = 0; i < event.nbSelectas; i++) {
+                    // console.log(event.rounds[0].sets[i].score);
+                    console.log(event.rounds[1].sets[i].selecta);
+                    var score = event.rounds[1].sets[i].score;
+                    var selectaId = event.rounds[1].sets[i].selecta;
+                    var scoreRd1 = event.scores1[i].score;
+                    var finalScore = score + scoreRd1;
 
-                console.log('BEFORE ----------------------------------');
-                console.log('score : ' + score);
-                console.log('scoresTemp : ' + scoresTemp);
-                console.log('roundWinner : ' + roundWinner);
-                console.log('selectaId : ' + selectaId);
+                    console.log('BEFORE ----------------------------------');
+                    console.log('score : ' + score);
+                    console.log('scoresTemp : ' + scoresTemp);
+                    console.log('roundWinner : ' + roundWinner);
+                    console.log('selectaId : ' + selectaId);
 
-                if(score > scoresTemp) {
-                    roundWinner = selectaId;
-                    scoresTemp = score;
+                    // set the round winner
+                    if(score > scoresTemp) {
+                        roundWinner = selectaId;
+                        scoresTemp = score;
+                    }
+                    // set the final winner
+                    if(finalScore > finalScoresTemp) {
+                        finalWinner = selectaId;
+                        finalScoresTemp = finalScore;
+                    }
+
+                    console.log('AFTER ----------------------------------');
+                    console.log('score : ' + score);
+                    console.log('scoresTemp : ' + scoresTemp);
+                    console.log('roundWinner : ' + roundWinner);
+                    console.log('selectaId : ' + selectaId);
+
+                    Event.findOneAndUpdate(
+                        {  _id: eventId, 'scores2.selecta': selectaId },
+                        { $set:  { 'scores2.$.score': score }},
+                        {new: true}
+                    )
+                    .then((e) => {
+                        console.log("WOOP_________________", e.scores2)
+                        console.log("_____________________", event.scores2)
+                    })
+                    .catch((err) => {
+                        next(err);
+                    });
                 }
 
-                console.log('AFTER ----------------------------------');
-                console.log('score : ' + score);
-                console.log('scoresTemp : ' + scoresTemp);
-                console.log('roundWinner : ' + roundWinner);
-                console.log('selectaId : ' + selectaId);
+                console.log('ROUND 2 WINNER IS : ' + roundWinner);
+                console.log('----------------------------------------------------------------------');
 
-                Event.findOneAndUpdate(
-                    {  _id: eventId, 'scores2.selecta': selectaId },
-                    { $set:  { 'scores2.$.score': score }},
-                    {new: true}
-                )
-                .then((e) => {
-                    console.log("WOOP_________________", e.scores2)
-                    console.log("_____________________", event.scores2)
+                // if(isFinal) {
+                Event.findByIdAndUpdate(eventId, {$set: { winner2: roundWinner , winner: finalWinner, status: 'closed'}}, {new: true})
+                .then((upEvent) => {
+
+                    const watchit = {
+                        type: 'winClash',
+                        user: finalWinner,
+                        event: eventId
+                    }
+
+                    return WatchIt.create(watchit);
+                })
+                .then(() => {
+                    return User.updateMany( { $set: { game: newGame } } );
+                })
+                .then((result) => {
+                    res.json(result);
                 })
                 .catch((err) => {
                     next(err);
                 });
             }
 
-            console.log('ROUND WINNER IS : ' + roundWinner);
 
-            // (bookId, {user, status, $unset: {cache: 1}})
-            Event.findByIdAndUpdate(eventId, {$set: { winner2: roundWinner, 'rounds.2.status': 'displayed' }})
-            .then(() => {
-               return User.updateMany( { $set: { game: newGame } } );
-            })
-            .then((result) => {
-                res.json(result);
-            })
-            .catch((err) => {
-                next(err);
-            });
+            // else {
+            //     Event.findByIdAndUpdate(eventId, {$set: { winner2: roundWinner, 'rounds.2.status': 'displayed' }}, {new: true})
+            //     .then(() => {
+            //        return User.updateMany( { $set: { game: newGame } } );
+            //     })
+            //     .then((result) => {
+            //         res.json(result);
+            //     })
+            //     .catch((err) => {
+            //         next(err);
+            //     });
+            // }
 
         })
         .catch((err) => {

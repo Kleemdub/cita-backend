@@ -34,6 +34,11 @@ const { nickname, email, password } = req.body;
         }
     });
 
+    const newGame = {
+        bullet: 4,
+        like: 8,
+        bouse: 4
+    }
 
     const salt = bcrypt.genSaltSync(bcryptSalt); 
     const encryptedPassword = bcrypt.hashSync(password, salt)
@@ -41,7 +46,8 @@ const { nickname, email, password } = req.body;
     const newUser = new User({
         nickname,
         encryptedPassword: encryptedPassword,
-        email: email
+        email: email,
+        game: newGame
     });
   
     newUser.save((err) => {
